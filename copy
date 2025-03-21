@@ -1,0 +1,64 @@
+COPY(9)                    Kernel Developer's Manual                   COPY(9)
+
+NNAAMMEE
+     ccooppyy, ccooppyyiinn, ccooppyyiinnssttrr, ccooppyyoouutt, ccooppyyssttrr – kernel copy functions
+
+SSYYNNOOPPSSIISS
+     ##iinncclluuddee <<ssyyss//ttyyppeess..hh>>
+     ##iinncclluuddee <<ssyyss//ssyyssttmm..hh>>
+
+     _i_n_t
+     ccooppyyiinn(_c_o_n_s_t _v_o_i_d _*_u_a_d_d_r, _v_o_i_d _*_k_a_d_d_r, _s_i_z_e___t _l_e_n);
+
+     _i_n_t
+     ccooppyyiinnssttrr(_c_o_n_s_t _v_o_i_d _*_u_a_d_d_r, _v_o_i_d _*_k_a_d_d_r, _s_i_z_e___t _l_e_n, _s_i_z_e___t _*_d_o_n_e);
+
+     _i_n_t
+     ccooppyyoouutt(_c_o_n_s_t _v_o_i_d _*_k_a_d_d_r, _v_o_i_d _*_u_a_d_d_r, _s_i_z_e___t _l_e_n);
+
+     _i_n_t
+     ccooppyyssttrr(_c_o_n_s_t _v_o_i_d _*_k_f_a_d_d_r, _v_o_i_d _*_k_d_a_d_d_r, _s_i_z_e___t _l_e_n, _s_i_z_e___t _*_d_o_n_e);
+
+DDEESSCCRRIIPPTTIIOONN
+     The ccooppyy functions are designed to copy contiguous data from one address
+     to another.  All but ccooppyyssttrr() copy data from user-space to kernel-space
+     or vice-versa.
+
+     The ccooppyy routines provide the following functionality:
+
+     ccooppyyiinn()      Copies _l_e_n bytes of data from the user-space address _u_a_d_d_r
+                   to the kernel-space address _k_a_d_d_r.
+
+     ccooppyyiinnssttrr()   Copies a NUL-terminated string, at most _l_e_n bytes long,
+                   from user-space address _u_a_d_d_r to kernel-space address
+                   _k_a_d_d_r.  The number of bytes actually copied, including the
+                   terminating NUL, is returned in _*_d_o_n_e.
+
+     ccooppyyoouutt()     Copies _l_e_n bytes of data from the kernel-space address
+                   _k_a_d_d_r to the user-space address _u_a_d_d_r.
+
+     ccooppyyssttrr()     Copies a NUL-terminated string, at most _l_e_n bytes long,
+                   from kernel-space address _k_f_a_d_d_r to kernel-space address
+                   _k_d_a_d_d_r.  The number of bytes actually copied, including the
+                   terminating NUL, is returned in _*_d_o_n_e.
+
+RREETTUURRNN VVAALLUUEESS
+     The ccooppyy functions return 0 on success or the following error on failure:
+
+     [EFAULT]           If a bad address is encountered.  When this error is
+                        returned, the contents of the destination buffer (
+                        _*_k_a_d_d_r for ccooppyyiinn(), ccooppyyiinnssttrr(), and ccooppyyssttrr();
+                        _*_u_a_d_d_r for ccooppyyoouutt()) are undefined.  For ccooppyyiinnssttrr()
+                        and ccooppyyssttrr(), the contents of the _*_d_o_n_e parameter are
+                        also undefined on a return of EFAULT.
+
+     In addition to EFAULT, ccooppyyssttrr() and ccooppyyiinnssttrr() on failure will return:
+
+     [ENAMETOLONG]      When the string is longer than _l_e_n bytes.  On this
+                        error return, the destination buffer is not null-
+                        terminated, but the _*_d_o_n_e parameter is maintained.
+
+SSEEEE AALLSSOO
+     fetch(9), store(9)
+
+macOS 15.3                      October 2, 2008                     macOS 15.3
